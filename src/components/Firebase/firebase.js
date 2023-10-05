@@ -1,3 +1,4 @@
+import { toHaveStyle } from '@testing-library/jest-dom/matchers';
 import { initializeApp } from 'firebase/app';
 import { 
     getAuth, 
@@ -7,6 +8,10 @@ import {
     signOut, 
     updatePassword 
 } from 'firebase/auth'
+import { 
+    getDatabase,
+    ref
+} from 'firebase/database'
 
 const config = {
     apiKey: process.env.REACT_APP_API_KEY,
@@ -22,6 +27,7 @@ class Firebase {
     constructor() {
         this.app = initializeApp(config);
         this.auth = getAuth(this.app);
+        this.db = getDatabase(this.app);
     }
 
     /** Auth API */
@@ -37,6 +43,12 @@ class Firebase {
     doPasswordReset = email => sendPasswordResetEmail(this.auth, email);
 
     doPasswordUpdate = password => updatePassword(this.auth, password);
+
+    /** User API */
+
+    user = uid => ref(this.db, `users/${uid}`)
+
+    users = () => ref(this.db, 'users');
 }
 
 export default Firebase;
