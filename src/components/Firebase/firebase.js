@@ -32,7 +32,7 @@ class Firebase {
     doSignInWithEmailAndPassword = (email, password) => 
         signInWithEmailAndPassword(this.auth, email, password)
 
-    doSignOut = () => signOut();
+    doSignOut = () => signOut(this.auth);
 
     doPasswordReset = email => sendPasswordResetEmail(this.auth, email);
 

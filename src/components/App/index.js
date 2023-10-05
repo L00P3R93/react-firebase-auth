@@ -11,21 +11,26 @@ import AccountPage from '../Account'
 import AdminPage from '../Admin';
 
 import * as ROUTES from '../../constants/routes';
+import { withAuthentication } from "../Session";
 
-const App = () => (
-    <Router>
-        <Navigation />
-        <hr />
-        <Routes>
-            <Route exact path={ROUTES.LANDING} Component={LandingPage} />
-            <Route path={ROUTES.SIGN_UP} Component={SignUpPage} />
-            <Route path={ROUTES.SIGN_IN} Component={SignInPage} />
-            <Route path={ROUTES.PASSWORD_FORGET} Component={PasswordForgetPage} />
-            <Route path={ROUTES.HOME} Component={HomePage} />
-            <Route path={ROUTES.ACCOUNT} Component={AccountPage} />
-            <Route path={ROUTES.ADMIN} Component={AdminPage} />
-        </Routes>
-    </Router>
-);
+const App = () => {
+    return (
+        <Router>
+            <div>
+                <Navigation />
+                <hr />
+                <Routes>
+                    <Route exact path={ROUTES.LANDING} Component={LandingPage} />
+                    <Route path={ROUTES.SIGN_UP} Component={SignUpPage} />
+                    <Route path={ROUTES.SIGN_IN} Component={SignInPage} />
+                    <Route path={ROUTES.PASSWORD_FORGET} Component={PasswordForgetPage} />
+                    <Route path={ROUTES.HOME} Component={HomePage} />
+                    <Route path={ROUTES.ACCOUNT} Component={AccountPage} />
+                    <Route path={ROUTES.ADMIN} Component={AdminPage} />
+                </Routes>
+            </div>
+        </Router>
+    );
+}
 
-export default App;
+export default withAuthentication(App);

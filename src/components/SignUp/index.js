@@ -58,7 +58,7 @@ const SignUpFormBase = ({firebase}) => {
         firebase
             .doCreateUserWithEmailAndPassword(email, passwordOne)
             .then(authUser => {
-                console.log(authUser)
+                console.log(username)
                 setState({ ...INITIAL_STATE })
                 navigate(ROUTES.HOME);
             })
