@@ -4,8 +4,17 @@ import {
     createUserWithEmailAndPassword, 
     signInWithEmailAndPassword, 
     sendPasswordResetEmail, 
+    signInWithPopup,
     signOut, 
-    updatePassword 
+    updatePassword,
+    GoogleAuthProvider,
+    FacebookAuthProvider,
+    TwitterAuthProvider,
+    EmailAuthProvider,
+    fetchSignInMethodsForEmail,
+    linkWithPopup,
+    unlink,
+    linkWithCredential
 } from 'firebase/auth'
 import { 
     getDatabase,
@@ -27,17 +36,48 @@ const config = {
 class Firebase {
     constructor() {
         this.app = initializeApp(config);
+
         this.auth = getAuth(this.app);
         this.db = getDatabase(this.app);
-    }
 
+        this.emailAuthProvider = EmailAuthProvider;
+
+        this.googleProvider = new GoogleAuthProvider();
+        this.facebookProvider = new FacebookAuthProvider();
+        this.twitterProvider = new TwitterAuthProvider();
+
+    }
     /** Auth API */
+    
+    getAuthCredential = (email, password) => 
+        this.emailAuthProvider.credential(email, password)
 
     doCreateUserWithEmailAndPassword = (email, password) => 
         createUserWithEmailAndPassword(this.auth, email, password)
 
     doSignInWithEmailAndPassword = (email, password) => 
         signInWithEmailAndPassword(this.auth, email, password)
+
+    doSignInWithGoogle = () => 
+        signInWithPopup(this.auth, this.googleProvider)
+    
+    doSignInWithFacebook = () => 
+        signInWithPopup(this.auth, this.facebookProvider)
+
+    doSignInWithTwitter = () => 
+        signInWithPopup(this.auth, this.twitterProvider)    
+
+    doFetchSignInMethodsForEmail = email => 
+        fetchSignInMethodsForEmail(this.auth, email)
+    
+    doLinkWithPopup = (provider) => 
+        linkWithPopup(this.auth.currentUser, provider)
+
+    doUnlink = providerId => 
+        unlink(this.auth.currentUser, providerId);
+
+    doLinkWithCredential = credential => 
+        linkWithCredential(this.auth.currentUser, credential);
 
     doSignOut = () => signOut(this.auth);
 
@@ -96,7 +136,6 @@ class Firebase {
             })
         })
     }
-
 
     onAuthUserListener = (next, fallback) => 
         this.auth.onAuthStateChanged(authUser => {

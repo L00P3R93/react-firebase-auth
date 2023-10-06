@@ -63,8 +63,9 @@ const UserList = ({ users }) => (
                 <span>
                     <strong>Username:</strong> {user.username} &nbsp;&nbsp;
                 </span>
+                
                 <span>
-                    <strong>Role:</strong> {Object.values(user.roles).join(', ')} &nbsp;&nbsp;
+                    <strong>Role:</strong> { user.roles && Object.values(user.roles).join(', ')} &nbsp;&nbsp;
                 </span>
             </li>
         )) }

@@ -14,6 +14,16 @@ const SignUpPage = () => (
     </div>
 )
 
+const ERROR_CODE_ACCOUNT_EXISTS = 'auth/email-already-in-use';
+
+const ERROR_MSG_ACCOUNT_EXISTS = `
+    An account with this E-Mail address already exists. 
+    Try to login from this account instead. If you think the 
+    account is already used from one of the social logins, try 
+    to sign-in with one of them. Afterward, associate your accounts 
+    on your profile.
+`;
+
 const INITIAL_STATE = {
     username: '',
     email: '',
@@ -80,6 +90,9 @@ const SignUpFormBase = ({firebase}) => {
                 navigate(ROUTES.HOME);
             })
             .catch(error => {
+                if(error.code === ERROR_CODE_ACCOUNT_EXISTS){
+                    error.message = ERROR_MSG_ACCOUNT_EXISTS;
+                }
                 setState({ error })
             })
     }
