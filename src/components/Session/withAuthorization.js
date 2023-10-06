@@ -11,19 +11,18 @@ const withAuthorization = condition => Component => {
     const WithAuthorization = props => {
         const navigate = useNavigate();
         useEffect(() => {
-            const listener = props.firebase.auth.onAuthStateChanged(
+            const listener = props.firebase.onAuthUserListener(
                 authUser => {
-                    if (!condition(authUser)) {
-                        navigate(ROUTES.SIGN_IN);
-                    }
+                    if (!condition(authUser)) {navigate(ROUTES.SIGN_IN);}
                 },
-            );
+                () => navigate(ROUTES.SIGN_IN),
+            )
             
             return () => {
                 listener();
             }
 
-        }, [props.firebase.auth, navigate]);
+        }, [props.firebase, navigate]);
 
         return (
             <AuthUserContext.Consumer>

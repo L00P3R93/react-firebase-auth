@@ -1,4 +1,3 @@
-import { toHaveStyle } from '@testing-library/jest-dom/matchers';
 import { initializeApp } from 'firebase/app';
 import { 
     getAuth, 
@@ -10,7 +9,9 @@ import {
 } from 'firebase/auth'
 import { 
     getDatabase,
-    ref
+    ref,
+    set,
+    onValue,
 } from 'firebase/database'
 
 const config = {
@@ -49,6 +50,76 @@ class Firebase {
     user = uid => ref(this.db, `users/${uid}`)
 
     users = () => ref(this.db, 'users');
+
+    writeUserData = (uid, username, email, roles) => {
+        set(this.user(uid), {
+            username,
+            email,
+            roles
+        })
+    }
+
+    readUsers = () => {
+        return new Promise((resolve, reject) => {
+            onValue(this.users(), snapshot => {
+                const data = snapshot.val();
+                if(data){
+                    resolve(
+                        Object.keys(data).map(key => ({
+                            ...data[key],
+                            uid: key,
+                        }))
+                    )
+                }else{
+                    reject(new Error('No users found'))
+                }
+            }, error => {
+                reject(error)
+            })
+        })
+    }
+
+    readUserData = uid => {
+        return new Promise((resolve, reject) => {
+            onValue(this.user(uid), snapshot => {
+                const data = snapshot.val();
+                if(data){
+                    resolve({
+                        ...data,
+                        uid
+                    })
+                }else{
+                    reject(new Error('No user found'))
+                }
+            }, error => {
+                reject(error)
+            })
+        })
+    }
+
+
+    onAuthUserListener = (next, fallback) => 
+        this.auth.onAuthStateChanged(authUser => {
+            if(authUser) {
+                this.readUserData(authUser.uid).then(dbUser => {
+                    if(!dbUser.roles) {
+                        dbUser.roles = {};
+                    }
+                    
+                    authUser = {
+                        uid: authUser.uid,
+                        email: authUser.email,
+                        ...dbUser
+                    };
+
+                    next(authUser)
+                }).catch(error => {
+                    new Error(error);
+                })
+            }else {
+                fallback()
+            }
+        });
 }
 
 export default Firebase;

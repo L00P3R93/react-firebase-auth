@@ -5,6 +5,7 @@ import { withRouter } from '../util'
 
 import { withFirebase } from '../Firebase'
 import * as ROUTES from '../../constants/routes'
+import * as ROLES from '../../constants/roles'
 
 const SignUpPage = () => (
     <div>
@@ -18,6 +19,7 @@ const INITIAL_STATE = {
     email: '',
     passwordOne: '',
     passwordTwo: '',
+    isAdmin: false,
     error: null,
 }
 
@@ -30,6 +32,7 @@ const SignUpFormBase = ({firebase}) => {
         email,
         passwordOne,
         passwordTwo,
+        isAdmin,
         error,
     } = state;
 
@@ -38,6 +41,13 @@ const SignUpFormBase = ({firebase}) => {
         passwordOne === '' ||
         email === '' ||
         username === '';
+
+    const handleChangeCheckbox = event => {
+        setState({
+            ...state,
+            [event.target.name]: event.target.checked,
+        })
+    }
 
     const handleChange = event => {
         setState({
@@ -53,12 +63,19 @@ const SignUpFormBase = ({firebase}) => {
             username,
             email,
             passwordOne,
+            isAdmin
         } = state
 
+        const roles = {}
+
+        if(isAdmin) {
+            roles[ROLES.ADMIN] = ROLES.ADMIN
+        }
         firebase
             .doCreateUserWithEmailAndPassword(email, passwordOne)
             .then(authUser => {
-                console.log(username)
+                return firebase.writeUserData(authUser.user.uid, username, email, roles)
+            }).then(() => {
                 setState({ ...INITIAL_STATE })
                 navigate(ROUTES.HOME);
             })
@@ -97,6 +114,15 @@ const SignUpFormBase = ({firebase}) => {
                 type='password'
                 placeholder='Confirm Password'
             />
+            <label>
+                Admin: 
+                <input 
+                    name='isAdmin'
+                    type='checkbox'
+                    checked={isAdmin}
+                    onChange={handleChangeCheckbox}
+                />
+            </label>
             <button disabled={isInvalid} type='submit'>Sign Up</button>
             {error && <p>{error.message}</p>}
         </form>
