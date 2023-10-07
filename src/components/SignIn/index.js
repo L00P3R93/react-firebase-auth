@@ -3,11 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withRouter } from '../util';
 
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+
 import { SignUpLink } from '../SignUp';
 import { PasswordForgetLink } from '../PasswordForget';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 import * as ROLES from '../../constants/roles';
+
+import ErrorMessage from '../Error';
 
 const SignInPage = () => (
     <div>
@@ -73,26 +78,21 @@ const SignInFormBase = ({ firebase }) => {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input 
-                name='email'
-                value={email}
-                onChange={handleChange}
-                type='text'
-                placeholder='Email Address'
-            />
-            <input 
-                name='password'
-                value={password}
-                onChange={handleChange}
-                type='password'
-                placeholder='Password'
-            />
-            <button disabled={isInvalid} type='submit'>
-                Sign In
-            </button>
-            { error && <p>{error.message}</p> }
-        </form>
+        <>
+            <Form onSubmit={handleSubmit}>
+                <Form.Group className='mb-3' controlId='formBasicEmail'>
+                    <Form.Label>Email address</Form.Label>
+                    <Form.Control type='email' placeholder='Email Address' value={email} onChange={handleChange} name='email' />
+                    <Form.Text className='text-muted'>We'll never share your email with anyone else.</Form.Text>
+                </Form.Group>
+                <Form.Group className='mb-3' controlId='formBasicPassword'>
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control type='password' placeholder='Password' value={password} onChange={handleChange} name='password' />
+                </Form.Group>
+                <Button variant='primary' type='submit' disabled={isInvalid}>Sign In</Button>
+                { error && <ErrorMessage error={error} /> }
+            </Form>
+        </>
     )
 }
 

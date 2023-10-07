@@ -1,6 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+
 import SignOutButton from "../SignOut";
 import * as ROUTES from "../../constants/routes";
 import * as ROLES from "../../constants/roles";
@@ -9,43 +13,41 @@ import { AuthUserContext } from "../Session";
 const Navigation = ({ authUser }) => (
     <div>
         <AuthUserContext.Consumer>
-            { authUser => authUser ? <NavigationAuth authUser={authUser} /> : <NavigationNonAuth /> }
+            {authUser => (
+                <Navbar expand="lg" className="bg-body-tertiary" data-bs-theme="dark">
+                    <Container>
+                        <Navbar.Brand as={Link} to={ROUTES.LANDING}>SNTAKS</Navbar.Brand>
+                        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                        <Navbar.Collapse id="basic-navbar-nav">
+                            <Nav className="ml-auto">
+                                {authUser ? <NavigationAuth authUser={authUser} /> : <NavigationNonAuth />}
+                            </Nav>
+                        </Navbar.Collapse>
+                    </Container>
+                </Navbar>
+            )}
         </AuthUserContext.Consumer>
     </div>
 )
 
 const NavigationAuth = ({ authUser }) => (
-    <ul>
-        <li>
-            <Link to={ROUTES.LANDING}>Landing</Link>
-        </li>
-        <li>
-            <Link to={ROUTES.HOME}>Home</Link>
-        </li>
-        <li>
-            <Link to={ROUTES.ACCOUNT}>Account</Link>
-        </li>
+    <>
+        <Nav.Link as={Link} to={ROUTES.LANDING}>Landing</Nav.Link>
+        <Nav.Link as={Link} to={ROUTES.HOME}>Home</Nav.Link>
+        <Nav.Link as={Link} to={ROUTES.ACCOUNT}>Account</Nav.Link>
         {!!authUser.roles[ROLES.ADMIN] && (
-            <li>
-                <Link to={ROUTES.ADMIN}>Admin</Link>
-            </li>
+            <Nav.Link as={Link} to={ROUTES.ADMIN}>Admin</Nav.Link>
         )}
-        
-        <li>
-            <SignOutButton />
-        </li>
-    </ul>
+        <SignOutButton />
+    </>
+    
 )
 
 const NavigationNonAuth = () => (
-    <ul>
-        <li>
-            <Link to={ROUTES.LANDING}>Landing</Link>
-        </li>
-        <li>
-            <Link to={ROUTES.SIGN_IN}>Sign In</Link>
-        </li>
-    </ul>
+    <>
+        <Nav.Link as={Link} to={ROUTES.LANDING}>Landing</Nav.Link>
+        <Nav.Link as={Link} to={ROUTES.SIGN_IN}>Sign In</Nav.Link>
+    </>
 )
 
 export default Navigation;

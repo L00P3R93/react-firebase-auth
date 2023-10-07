@@ -1,5 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+import Container from 'react-bootstrap/Container';
 
 import Navigation from '../Navigation'
 import LandingPage from "../Landing";
@@ -18,16 +21,17 @@ const App = () => {
         <Router>
             <div>
                 <Navigation />
-                <hr />
-                <Routes>
-                    <Route exact path={ROUTES.LANDING} Component={LandingPage} />
-                    <Route path={ROUTES.SIGN_UP} Component={SignUpPage} />
-                    <Route path={ROUTES.SIGN_IN} Component={SignInPage} />
-                    <Route path={ROUTES.PASSWORD_FORGET} Component={PasswordForgetPage} />
-                    <Route path={ROUTES.HOME} Component={HomePage} />
-                    <Route path={ROUTES.ACCOUNT} Component={AccountPage} />
-                    <Route path={ROUTES.ADMIN} Component={AdminPage} />
-                </Routes>
+                <Container>
+                    <Routes>
+                        <Route exact path={ROUTES.LANDING} Component={LandingPage} />
+                        <Route path={ROUTES.SIGN_UP} Component={SignUpPage} />
+                        <Route path={ROUTES.SIGN_IN} Component={SignInPage} />
+                        <Route path={ROUTES.PASSWORD_FORGET} Component={PasswordForgetPage} />
+                        <Route path={ROUTES.HOME} Component={HomePage} />
+                        <Route path={ROUTES.ACCOUNT} Component={AccountPage} />
+                        <Route path={ROUTES.ADMIN} Component={AdminPage} />
+                    </Routes>
+                </Container>
             </div>
         </Router>
     );
