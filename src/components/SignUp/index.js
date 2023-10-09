@@ -86,6 +86,8 @@ const SignUpFormBase = ({firebase}) => {
             .then(authUser => {
                 return firebase.writeUserData(authUser.user.uid, username, email, roles)
             }).then(() => {
+                return firebase.doSendEmailVerification()  
+            }).then(() => {
                 setState({ ...INITIAL_STATE })
                 navigate(ROUTES.HOME);
             })

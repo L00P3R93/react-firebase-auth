@@ -5,6 +5,8 @@ import { withRouter } from '../util';
 
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGoogle, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
 
 import { SignUpLink } from '../SignUp';
 import { PasswordForgetLink } from '../PasswordForget';
@@ -19,9 +21,20 @@ const SignInPage = () => (
         <h1>Sign In</h1>
         <SignInForm />
         <br />
-        <SignInGoogle />
-        <SignInFacebook />
-        <SignInTwitter />
+        <div className="d-flex flex-row bd-highlight mb-3">
+            <div className="p-2 bd-highlight">
+                <SignInGoogle />
+            </div>
+            <div className="p-2 bd-highlight">
+                <SignInFacebook />
+            </div>
+            <div className="p-2 bd-highlight">
+                <SignInTwitter />
+            </div>
+        </div>
+        
+        
+        
         <PasswordForgetLink />
         <SignUpLink />
     </div>
@@ -133,8 +146,10 @@ const SignInGoogleBase = ({ firebase }) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <button type='submit'>Sign In With Google</button>
-            {error && <p>{error.message}</p> }
+            <Button variant='primary' type='submit'>
+                <FontAwesomeIcon icon={faGoogle} />&nbsp;
+            </Button>
+            {error && <ErrorMessage error={error} />}
         </form>
     )
 }
@@ -173,8 +188,10 @@ const SignInFacebookBase = ({ firebase }) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <button type='submit'>Sign In With Facebook</button>
-            {error && <p>{error.message}</p> }
+            <Button variant='primary' type='submit'>
+                <FontAwesomeIcon icon={faFacebook} />&nbsp;
+            </Button>
+            {error && <ErrorMessage error={error} /> }
         </form>
     )
 }
@@ -213,8 +230,10 @@ const SignInTwitterBase = ({ firebase }) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <button type='submit'>Sign In With Twitter</button>
-            {error && <p>{error.message}</p> }
+            <Button variant='primary' type='submit'>
+                <FontAwesomeIcon icon={faTwitter} />&nbsp;
+            </Button>
+            {error && <ErrorMessage error={error} /> }
         </form>
     )
 }

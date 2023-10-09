@@ -14,7 +14,8 @@ import {
     fetchSignInMethodsForEmail,
     linkWithPopup,
     unlink,
-    linkWithCredential
+    linkWithCredential,
+    sendEmailVerification
 } from 'firebase/auth'
 import { 
     getDatabase,
@@ -57,6 +58,9 @@ class Firebase {
 
     doSignInWithEmailAndPassword = (email, password) => 
         signInWithEmailAndPassword(this.auth, email, password)
+
+    doSendEmailVerification = () =>
+        sendEmailVerification(this.auth.currentUser, { url: process.env.REACT_APP_CONFIRMATION_EMAIL_REDIRECT })
 
     doSignInWithGoogle = () => 
         signInWithPopup(this.auth, this.googleProvider)
@@ -148,6 +152,8 @@ class Firebase {
                     authUser = {
                         uid: authUser.uid,
                         email: authUser.email,
+                        emailVerified: authUser.emailVerified,
+                        providerData: authUser.providerData,
                         ...dbUser
                     };
 
